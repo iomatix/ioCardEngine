@@ -8,7 +8,7 @@
 
 
 
-### License
+## [License](LICENSE.md)
 
 ![](https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1) ![](https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1) ![](https://mirrors.creativecommons.org/presskit/icons/sa.svg?ref=chooser-v1)
 
