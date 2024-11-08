@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cardengine/cardengine.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// The main widget of the FlameGame instance
+/// The main `[GameWidget]` of the `[CardEngine]` instance
 class CardGameWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {

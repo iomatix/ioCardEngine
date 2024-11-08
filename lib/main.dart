@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:flame/game.dart';
-import 'package:cardengine/cardengine.dart';
 
 import 'widgets/card_game_widget.dart';
 

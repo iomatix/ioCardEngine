@@ -2,30 +2,19 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 
-enum CardCategory { A, B, C }
 
 class CardComponent extends PositionComponent {
-  final CardCategory category;
-  Sprite? sprite;
+  final String id;
+  final Sprite sprite;
 
-  CardComponent(this.category);
-
-  @override
-  Future<void> onLoad() async {
-
-    sprite = await Sprite.load('images/card_${category.name.toLowerCase()}.png');
-    size = Vector2(100, 150);
-  }
+  CardComponent({required Vector2 position, required Vector2 size, required this.sprite})
+      : id = DateTime.now().millisecondsSinceEpoch.toString(),
+        super(position: position, size: size);
 
   @override
   void render(Canvas canvas) {
-    sprite?.render(canvas, size: size);
+    final paint = Paint()..color = Colors.white;
+    canvas.drawRect(Rect.fromLTWH(position.x, position.y, size.x, size.y), paint);
+    sprite.render(canvas);
   }
-  
-  @override
-  bool onDragUpdate(DragUpdateInfo info) {
-  position += info.delta.global;
-  return true;
-}
-
 }

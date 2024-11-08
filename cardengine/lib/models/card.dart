@@ -9,7 +9,7 @@ import 'meta/card_metadata.dart';
 class Card {
   final String id;
   String _name;
-  CardCategory _category;
+  String _category;
   List<String> _tags;
 
   Size _size;
@@ -19,7 +19,7 @@ class Card {
   CardMetadata _metadata;
 
   Card({
-    required CardCategory category,
+    required String category,
     required String name,
     required Sprite front,
     required Sprite reverse,
@@ -37,7 +37,7 @@ class Card {
 
   // Getters
   String get name => _name;
-  CardCategory get category => _category;
+  String get category => _category;
   List<String> get tags =>
       List.unmodifiable(_tags); // Prevent modification from outside
   Size get size => _size;
@@ -50,7 +50,7 @@ class Card {
     _name = newName;
   }
 
-  set category(CardCategory newCategory) {
+  set category(String newCategory) {
     _category = newCategory;
   }
 
