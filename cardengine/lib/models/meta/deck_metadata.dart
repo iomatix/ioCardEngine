@@ -1,10 +1,10 @@
-/// Metadata type for `[Card]` model.
-class CardMetadata {
+/// Metadata type for `[Deck]` model.
+class DeckMetadata {
   String _description;
   final DateTime _creationDate;
   DateTime _modificationDate;
 
-  CardMetadata({
+  DeckMetadata({
     String description = "",
     required double probability,
   })  : _description = description,

@@ -1,12 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
-import 'package:io_card_engine/card_engine.dart';
+import 'package:cardengine/cardengine.dart';
+
+import 'widgets/card_game_widget.dart';
+
+
 void main() {
   runApp(
     ProviderScope(
-      //child: MainApp(),
-      child: GameWidget(game: CardEngine())
+      child: MainApp(),
     ),
   );
 }
@@ -19,9 +22,11 @@ class MainApp extends ConsumerWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Hello World!'),
+          child: CardGameWidget(),
         ),
       ),
     );
   }
 }
+
+
