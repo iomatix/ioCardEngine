@@ -1,20 +1,45 @@
+
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
-import 'package:flutter/material.dart';
 
+import '../cardengine.dart';
+import '../worlds/table_world.dart';
+import '../models/card.dart';
 
-class CardComponent extends PositionComponent {
+class CardComponent extends SpriteGroupComponent<ButtonState> with HasGameReference<CardEngine>, HasWorldReference<TableWorld>, HasVisibility {
   final String id;
-  final Sprite sprite;
+  Card card;
 
-  CardComponent({required Vector2 position, required Vector2 size, required this.sprite})
-      : id = DateTime.now().millisecondsSinceEpoch.toString(),
-        super(position: position, size: size);
+  CardComponent({required this.card})
+      : id = "Card_Component_${card.id}_${DateTime.now().millisecondsSinceEpoch}",
+        super(size: Vector2(card.width,card.height), key: ComponentKey.named('card'));
 
   @override
-  void render(Canvas canvas) {
-    final paint = Paint()..color = Colors.white;
-    canvas.drawRect(Rect.fromLTWH(position.x, position.y, size.x, size.y), paint);
-    sprite.render(canvas);
+  Future<void>? onLoad() async {
+    final frontSprite = await game.loadSprite(card.frontSrc);
+    final reverseSprite = await game.loadSprite(card.reverseSrc);
+
+    sprites = {
+      ButtonState.down: frontSprite,
+      ButtonState.up: reverseSprite,
+    };
+
+    show();
+    setPosition(Vector2(64, 64));
+    
   }
+
+
+
+  void hide() async{
+    isVisible = false;
+  }
+
+  void show() async{
+    isVisible = true;
+  }
+
+  void setPosition(Vector2 newPos){
+    position = newPos;
+  }
+
 }

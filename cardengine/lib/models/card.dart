@@ -1,8 +1,4 @@
-import 'dart:ui';
-import 'package:flame/components.dart';
 import 'package:uuid/uuid.dart';
-
-import '../components/card_component.dart';
 import 'meta/card_metadata.dart';
 
 /// `[Card]` model designed to be instantiated in the engine and store the data in the application. 
@@ -12,25 +8,28 @@ class Card {
   String _category;
   List<String> _tags;
 
-  Size _size;
-  Sprite _front;
-  Sprite _reverse;
+  double _width;
+  double _height;
+  String _frontSrc;
+  String _reverseSrc;
 
   CardMetadata _metadata;
 
   Card({
     required String category,
     required String name,
-    required Sprite front,
-    required Sprite reverse,
-    required Size size,
+    required String frontSrc,
+    required String reverseSrc,
+    required double width,
+    required double height,
     required CardMetadata metadata,
     List<String> tags = const [],
   })  : _category = category,
         _name = name,
-        _front = front,
-        _reverse = reverse,
-        _size = size,
+        _frontSrc = frontSrc,
+        _reverseSrc = reverseSrc,
+        _width = width,
+        _height = height,
         _metadata = metadata,
         _tags = tags,
         id = Uuid().v4();
@@ -38,11 +37,11 @@ class Card {
   // Getters
   String get name => _name;
   String get category => _category;
-  List<String> get tags =>
-      List.unmodifiable(_tags); // Prevent modification from outside
-  Size get size => _size;
-  Sprite get front => _front;
-  Sprite get reverse => _reverse;
+  List<String> get tags => List.unmodifiable(_tags); // Prevent modification from outside
+  double get width => _width;
+  double get height => _height;
+  String get frontSrc => _frontSrc;
+  String get reverseSrc => _reverseSrc;
   CardMetadata get metadata => _metadata;
 
   // Setters
@@ -54,16 +53,20 @@ class Card {
     _category = newCategory;
   }
 
-  set size(Size newSize) {
-    _size = newSize;
+  set width(double newWidth) {
+    _width = newWidth;
   }
 
-  set front(Sprite newFront) {
-    _front = newFront;
+  set height(double newHeight) {
+    _height = newHeight;
   }
 
-  set reverse(Sprite newReverse) {
-    _reverse = newReverse;
+  set frontSrc(String newFront) {
+    _frontSrc = newFront;
+  }
+
+  set reverseSrc(String newReverse) {
+    _reverseSrc = newReverse;
   }
 
   /// Adds a new tag to the list.
@@ -80,7 +83,7 @@ class Card {
     if (_tags.contains(tag)) {
       _tags.remove(tag);
     } else {
-      throw ArgumentError('The $tag tag does not exists.');
+      throw ArgumentError('The $tag tag does not exist.');
     }
   }
 

@@ -6,7 +6,6 @@ class CardMetadata {
 
   CardMetadata({
     String description = "",
-    required double probability,
   })  : _description = description,
         _creationDate = DateTime.now(),
         _modificationDate = DateTime.now();
