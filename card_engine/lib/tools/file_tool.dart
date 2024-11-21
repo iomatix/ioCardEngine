@@ -5,6 +5,8 @@ import 'package:logger/logger.dart';
 /// Set of methods to handle binary files.
 ///
 class FileTool {
+  FileTool();
+
   /// Asynchronously reads a file from the application's bundle and returns its contents as a `Uint8List`.
   ///
   /// If the file does not exist or is corrupted, an empty `Uint8List` will be returned.

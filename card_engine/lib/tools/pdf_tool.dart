@@ -10,6 +10,8 @@ import '../tools/image_tool.dart';
 /// Set of methods to handle PDF files.
 ///
 class PdfTool {
+  PdfTool();
+
   /// Converts a PDF file to a list of images.
   ///
   /// This function takes a PDF file in the form of a [Uint8List] and converts
@@ -82,7 +84,6 @@ class PdfTool {
         images.add(tempImg.clone());
         im.dispose();
       }
-
     } catch (err) {
       logger.f("Error during image dart.ui to Image conversion.", error: err);
     }

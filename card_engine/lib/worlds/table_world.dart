@@ -1,14 +1,17 @@
 import 'package:flame/components.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 
 import '../components/card_component.dart';
 import '../models/meta/card_metadata.dart';
 import '../models/card.dart';
 
-class TableWorld extends World {
+class TableWorld extends World with RiverpodComponentMixin {
   @override
   Future<void> onLoad() async {
-    super.onLoad();
+    await super.onLoad();
 
+      // TODO: Level Scene loading
+    
     Card testcard = Card(
       category: 'test',
       name: 'test_card_model',
@@ -24,6 +27,15 @@ class TableWorld extends World {
 
   }
 
+  @override
+  void onMount() {
+    addToGameWidgetBuild(() {
+      // ref.listen(exampleProvider, (previous, next) { }); goes here
+    });
+    super.onMount();
+    // any other operations go here e.g. add(Component(value: someValue))
+  }
+  
   void addCard(CardComponent card) {
     add(card);
   }

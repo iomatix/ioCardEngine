@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ">=2.6.1 <3.0.0"
+  flame_riverpod: ">=5.1.0 <6.0.0"
   riverpod_annotation: ">=2.6.1 <3.0.0"
   logger: ">=2.4.0 <3.0.0"
   card_engine:
@@ -29,5 +30,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-
-assets: []
+  assets:
+  - 'card_engine/assets/'
+  - 'assets/images/'

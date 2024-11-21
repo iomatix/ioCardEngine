@@ -1,4 +1,4 @@
-import 'package:cardengine/cardengine.dart';
+import 'package:cardengine/card_engine.dart';
 import 'package:test/test.dart';
 
 void main() {

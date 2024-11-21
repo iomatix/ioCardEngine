@@ -8,6 +8,8 @@ import 'package:logger/logger.dart';
 /// Set of methods to handle image files.
 ///
 class ImageTool {
+  ImageTool();
+
 // This function asynchronously loads an image from Uint8List data.
 // It returns a Future<img.Image?> which resolves with the decoded image or null if there's an error.
   static Future<img.Image?> loadImage(Uint8List imageData) async {

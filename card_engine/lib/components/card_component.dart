@@ -1,11 +1,12 @@
 
 import 'package:flame/components.dart';
+import 'package:flame_riverpod/flame_riverpod.dart';
 
 import '../card_engine.dart';
 import '../worlds/table_world.dart';
 import '../models/card.dart';
 
-class CardComponent extends SpriteGroupComponent<ButtonState> with HasGameReference<CardEngine>, HasWorldReference<TableWorld>, HasVisibility {
+class CardComponent extends SpriteGroupComponent<ButtonState> with RiverpodComponentMixin, HasGameReference<CardEngine>, HasWorldReference<TableWorld>, HasVisibility {
   final String id;
   Card card;
 
@@ -26,6 +27,15 @@ class CardComponent extends SpriteGroupComponent<ButtonState> with HasGameRefere
     show();
     setPosition(Vector2(0, 0));
     
+  }
+
+  @override
+  void onMount() {
+    addToGameWidgetBuild(() {
+      // ref.listen(exampleProvider, (previous, next) { }); goes here
+    });
+    super.onMount();
+    // any other operations go here e.g. add(Component(value: someValue))
   }
 
 
