@@ -1,5 +1,5 @@
-name: cardengine
-description: A starting point for Dart libraries or applications.
+name: card_engine
+description: Card Engine made by ioMatix based on the foundations of flutter & flame.
 version: 0.1.0
 # repository: https://github.com/iomatix/ioCardEngine/tree/main
 
@@ -19,4 +19,5 @@ dev_dependencies:
   lints: ">=4.0.0 <5.0.0"
   test: ">=1.24.0 <2.0.0"
 
-assets: [] # TODO
+assets:
+    - assets/images/

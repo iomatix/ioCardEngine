@@ -13,8 +13,8 @@ dependencies:
   flutter_riverpod: ">=2.6.1 <3.0.0"
   riverpod_annotation: ">=2.6.1 <3.0.0"
   logger: ">=2.4.0 <3.0.0"
-  cardengine:
-    path: ./cardengine
+  card_engine:
+    path: ./card_engine
 
 
 dev_dependencies:
@@ -28,4 +28,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets: [] # TODO
+
+
+assets: []

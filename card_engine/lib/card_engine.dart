@@ -7,7 +7,7 @@ import 'package:flame/palette.dart';
 import './worlds/table_world.dart';
 
 // TODO: Export any libraries intended for clients of this package.
-export './cardengine.dart';
+export './card_engine.dart';
 
 class CardEngine extends FlameGame with SingleGameInstance {
 

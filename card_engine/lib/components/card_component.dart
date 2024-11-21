@@ -1,7 +1,7 @@
 
 import 'package:flame/components.dart';
 
-import '../cardengine.dart';
+import '../card_engine.dart';
 import '../worlds/table_world.dart';
 import '../models/card.dart';
 
@@ -11,7 +11,7 @@ class CardComponent extends SpriteGroupComponent<ButtonState> with HasGameRefere
 
   CardComponent({required this.card})
       : id = "Card_Component_${card.id}_${DateTime.now().millisecondsSinceEpoch}",
-        super(size: Vector2(card.width,card.height), key: ComponentKey.named('card'));
+        super(size: Vector2(card.width,card.height), key: ComponentKey.named('card'), anchor: Anchor.center);
 
   @override
   Future<void>? onLoad() async {
@@ -24,7 +24,7 @@ class CardComponent extends SpriteGroupComponent<ButtonState> with HasGameRefere
     };
 
     show();
-    setPosition(Vector2(64, 64));
+    setPosition(Vector2(0, 0));
     
   }
 
