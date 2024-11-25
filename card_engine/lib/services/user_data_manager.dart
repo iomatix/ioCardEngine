@@ -37,7 +37,7 @@ class UserDataManager {
     final userDataPath = await getUserDataPath();
     // Create the user_data directory and mandatory subdirectories
     await FileTool().createDirectory(userDataPath);
-    for (final subDir in _allSubDirectories) {
+    for (final subDir in List.from(_allSubDirectories)) {
       final path = '$userDataPath/$subDir';
       await FileTool().createDirectory(path);
     }
