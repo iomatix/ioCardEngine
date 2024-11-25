@@ -16,10 +16,6 @@ void main() {
   // Setup Services
   final UserDataManager userDataManager = ServiceManager().get<UserDataManager>();
   userDataManager.setupUserData();
-    userDataManager.createDirectory(category: 'test', relativePath: 'newbabe');
-    userDataManager.createDirectory(category: 'test', relativePath: 'testtest');
-    userDataManager.deleteDirectory(category: 'test', relativePath: 'placeholder');
-    userDataManager.createDirectory(category: 'test', relativePath: 'romek/dwazero');
 
   runApp(
     ProviderScope(
