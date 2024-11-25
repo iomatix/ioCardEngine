@@ -16,7 +16,7 @@ void main() {
   // Setup Services
   final UserDataManager userDataManager = ServiceManager().get<UserDataManager>();
   userDataManager.setupUserData();
-  
+
   runApp(
     ProviderScope(
       child: MainApp(),
