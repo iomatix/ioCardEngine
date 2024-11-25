@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
@@ -7,26 +9,48 @@ import 'package:logger/logger.dart';
 class FileTool {
   FileTool();
 
-  /// Asynchronously reads a file from the application's bundle and returns its contents as a `Uint8List`.
-  ///
-  /// If the file does not exist or is corrupted, an empty `Uint8List` will be returned.
-  ///
-  /// @param path The path to the file within the application's bundle.
-  /// return A future that completes with the file contents as a `Uint8List`, or an empty `Uint8List` if there was an error.
-  static Future<Uint8List> openFileAsUint8List(String path) async {
-    var logger = Logger();
-
+  Future<List<int>> openFileAsUint8List(String filePath) async {
     try {
-      // Load the binary data from the specified file path within the application's bundle
-      final ByteData data = await rootBundle.load(path);
-      // Convert the loaded byte data to a Uint8List and return it
-      final Uint8List bytes = data.buffer.asUint8List();
+
+      final filePath = File('filePath').absolute.path;
+
+      // Load the binary data from the specified file path on device storage
+      final bytes = File(filePath).readAsBytesSync();
+
+      if (bytes.isEmpty) {
+        throw Exception("The file is empty or doesn't exist.");
+      }
+
       return bytes;
     } catch (err) {
-      // Log any errors that occurred during file loading with the Logger package
-      logger.f("The file doesn't exist or is corrupted.", error: err);
-      // Return an empty Uint8List if there was an error
-      return Uint8List(0);
+      throw Exception("Failed to load file '$filePath'. Error: $err");
+    }
+  }
+
+  Future<List<int>> byteDataToListInt(ByteData byteData) async {
+    final buffer = byteData.buffer;
+    return buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+  }
+
+  Future<void> createDirectoryIfNotExists(String path) async {
+    final dir = Directory(path);
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
+    }
+  }
+
+  Future<void> saveAssetToFile({
+    required String assetPath,
+    required String filePath,
+  }) async {
+    try {
+      final byteData = await rootBundle.load(assetPath);
+      await File(filePath).writeAsBytes(
+        byteData.buffer
+            .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes),
+      );
+    } catch (e) {
+      print('Error occurred while saving asset to file: $e');
     }
   }
 }
