@@ -21,10 +21,10 @@ class CardEngine extends FlameGame with RiverpodGameMixin, SingleGameInstance {
   
   // TODO: Game loading
 
-  await Flame.images.loadAll([
-        'placeholder.png',
-        'placeholder-reverse.png',
-      ]);
+  //await Flame.images.loadAll([
+  //      'placeholder.png',
+  //      'placeholder-reverse.png',
+  //    ]);
     world = TableWorld();
 
   }

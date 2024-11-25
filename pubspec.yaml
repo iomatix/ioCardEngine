@@ -31,5 +31,5 @@ flutter:
   uses-material-design: true
 
   assets:
-  - 'card_engine/assets/'
-  - 'assets/images/'
+  - card_engine/assets/
+  - assets/images/
