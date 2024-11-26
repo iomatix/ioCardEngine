@@ -1,5 +1,5 @@
 import 'package:card_engine/card_engine.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('A group of tests', () {

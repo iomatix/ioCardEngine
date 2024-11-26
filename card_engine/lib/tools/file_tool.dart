@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:logger/logger.dart';
 
 ///
@@ -31,20 +31,20 @@ class FileTool {
     return buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
   }
 
-  Future<bool> doesDirectoryExist(String path) async {
-    final dir = Directory(path);
+  Future<bool> doesDirectoryExist(String absolutePath) async {
+    final dir = Directory(absolutePath);
     return await dir.exists();
   }
 
-  Future<void> createDirectory(String path) async {
-    if (!(await doesDirectoryExist(path))) {
-      await Directory(path).create(recursive: true);
+  Future<void> createDirectory(String absolutePath) async {
+    if (!(await doesDirectoryExist(absolutePath))) {
+      await Directory(absolutePath).create(recursive: true);
     }
   }
 
-  Future<void> deleteDirectory(String path) async {
-    if (await doesDirectoryExist(path)) {
-      await Directory(path).delete(recursive: true);
+  Future<void> deleteDirectory(String absolutePath) async {
+    if (await doesDirectoryExist(absolutePath)) {
+      await Directory(absolutePath).delete(recursive: true);
     }
   }
 

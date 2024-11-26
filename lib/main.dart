@@ -7,7 +7,7 @@ import 'widgets/card_game_widget.dart';
 
 
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Register Services
@@ -15,7 +15,7 @@ void main() {
   
   // Setup Services
   final UserDataManager userDataManager = ServiceManager().get<UserDataManager>();
-  userDataManager.setupUserData();
+  await userDataManager.setupUserData();
 
   runApp(
     ProviderScope(
