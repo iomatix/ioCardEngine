@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:path/path.dart' as p;
 
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:logger/logger.dart';
@@ -125,5 +126,19 @@ class FileTool {
     } catch (e) {
       print('Error occurred while saving asset to file: $e');
     }
+  }
+
+  /// Asynchronously normalizes the given [path] to a standard format.
+  ///
+  /// Returns [Future]<[String]> of the normalized path.
+  Future<String> normalizePath(String path) async {
+    return p.normalize(path);
+  }
+
+  /// Synchronously normalizes the given [path] to a standard format.
+  ///
+  /// Returns the normalized path as a [String].
+  String normalizePathSync(String path) {
+    return p.normalize(path);
   }
 }

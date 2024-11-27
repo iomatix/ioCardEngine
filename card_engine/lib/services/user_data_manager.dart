@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
 import 'package:mutex/mutex.dart';
 
 import '../tools/file_tool.dart';
 
+/// Manages user data directories by ensuring the existence of mandatory subdirectories,
+/// handling the creation and removal of dynamic directories, and maintaining directory integrity.
+///
+/// **Contains interface to manage the app-user related data.**
 class UserDataManager {
-  // Lockable memory access
+  /// Lockable memory access
   final Mutex _lock;
 
-  // Interval for run-time monitoring
+  /// Interval for run-time monitoring
   @Deprecated("This interval is not used anymore")
   static const _monitorInterval = Duration(milliseconds: 370);
 
@@ -34,16 +37,19 @@ class UserDataManager {
   /// Get the package directory for bundler
   Future<String> getCardEngineBundlerPath() async => 'packages/card_engine';
 
+  /// Initializes the user data by performing necessary local setup operations.
   Future<void> setupUserData() async {
     await _localSetup();
   }
 
+  /// Initializes the user data directory by creating mandatory subdirectories
+  /// and saving essential asset files.
   Future<void> _localSetup() async {
     final userDataPath = await getUserDataPath();
     // Create the user_data directory and mandatory subdirectories
     await FileTool().createDirectory(userDataPath);
     for (final subDir in List.from(_allSubDirectories)) {
-      final path = p.normalize('$userDataPath/$subDir');
+      final path = await FileTool().normalizePath('$userDataPath/$subDir');
       await FileTool().createDirectory(path);
     }
 
@@ -51,48 +57,53 @@ class UserDataManager {
     await FileTool().saveAssetToFile(
       assetPath:
           '${await getCardEngineBundlerPath()}/assets/images/placeholder.png',
-      filePath: p.normalize('$userDataPath/cards/.placeholder/placeholder.png'),
+      filePath: await FileTool()
+          .normalizePath('$userDataPath/cards/.placeholder/placeholder.png'),
     );
 
     // Copy placeholder-reverse.png to user_data
     await FileTool().saveAssetToFile(
       assetPath:
           '${await getCardEngineBundlerPath()}/assets/images/placeholder-reverse.png',
-      filePath: p.normalize(
+      filePath: await FileTool().normalizePath(
           '$userDataPath/cards/.placeholder/placeholder-reverse.png'),
     );
+
+    synchronizeUserData();
   }
 
-  /// Get the application documents directory
+  /// Gets the absolute path of the `user_data` directory
   Future<String> getUserDataPath() async {
     final directory = await getApplicationDocumentsDirectory();
-    return p.normalize('${directory.path}/Card Engine/user_data');
+    return await FileTool()
+        .normalizePath('${directory.path}/Card Engine/user_data');
   }
 
   /// Monitor and handle changes to subdirectories periodically.
   ///
   /// This function initializes mandatory subdirectories if they don't exist and updates the list of all subdirectories within the user's data path every `interval` milliseconds. It also enforces mandatory directories by recreating them if they are missing.
-  @Deprecated("This function is not run periodically anymore, call checkAndUpdateSubDirectories on demand.")
+  @Deprecated(
+      "This function is not run periodically anymore, call checkAndUpdateSubDirectories on demand.")
   Future<void> monitorSubDirectoriesPeriodically(
       {Duration interval = _monitorInterval}) async {
-    Timer.periodic(interval, (_) => checkAndUpdateSubDirectories());
+    Timer.periodic(interval, (_) => synchronizeUserData());
   }
 
-  /// Check and update subdirectories if there are changes. If a mandatory directory is missing, it will be recreated.
-  Future<void> checkAndUpdateSubDirectories() async {
+  /// Checks for changes in subdirectories and updates them accordingly.
+  /// Ensures all mandatory directories are present and synchronizes the internal directory list.
+  ///
+  /// **Run this function to synchronize `user_data` with the application on demand**
+  Future<void> synchronizeUserData() async {
     await _lock.protect(() async {
       try {
         final userDataPath = await getUserDataPath();
         final currentSubDirs = Directory(userDataPath)
             .listSync(recursive: true)
             .whereType<Directory>()
-            .map((dir) => p.normalize(dir.path.replaceFirst(
+            .map((dir) => FileTool().normalizePathSync(dir.path.replaceFirst(
                 RegExp('^${RegExp.escape(userDataPath)}[\\\\/]*'), '')))
             .toSet();
         if (currentSubDirs != _allSubDirectories) {
-          print(currentSubDirs);
-          print(_allSubDirectories);
-
           await _updateAndEnforceMandatoryDirectories(currentSubDirs);
         }
       } catch (e) {
@@ -143,7 +154,8 @@ class UserDataManager {
   Future<void> _addDynamicDirectory(String dirDynamicPath) async {
     _allSubDirectories.add(dirDynamicPath);
     final userDataPath = await getUserDataPath();
-    final path = p.normalize('$userDataPath/$dirDynamicPath');
+    final path =
+        await FileTool().normalizePath('$userDataPath/$dirDynamicPath');
     try {
       await FileTool().createDirectory(path);
     } catch (e) {
@@ -161,7 +173,8 @@ class UserDataManager {
   Future<void> _removeDynamicDirectory(String dirDynamicPath) async {
     _allSubDirectories.remove(dirDynamicPath);
     final userDataPath = await getUserDataPath();
-    final path = p.normalize('$userDataPath/$dirDynamicPath');
+    final path =
+        await FileTool().normalizePath('$userDataPath/$dirDynamicPath');
     try {
       await FileTool().deleteDirectory(path);
     } catch (e) {
@@ -178,11 +191,11 @@ class UserDataManager {
   /// This method creates the specified category directory along with any required subdirectories,
   /// adds it to `_allSubDirectories`, and returns the created path.
   ///
-  /// @param category The name of the category (e.g., 'card', 'deck').
-  /// @param relativePath The relative path for the new category, including any desired subdirectories.
-  ///                     For example, use 'new_shiny_card/variant_1' to create a card with a variant directory.
-  ///
-  /// @return A future that completes when the category and its subdirectories have been created successfully.
+  /// - Parameters:
+  ///   - `category`: The name of the category (e.g., 'card', 'deck').
+  ///   - `relativePath`: The relative path within the category.
+  ///                   For example, use 'new_shiny_card/variant_1' to create a card with a variant directory.
+  /// - Returns: A [Future] that completes when the category and its subdirectories have been created successfully.
   Future<void> createDynamicDirectory({
     required String category,
     required String relativePath,
@@ -199,10 +212,11 @@ class UserDataManager {
   /// This method removes the specified category from `_allSubDirectories` and deletes it along with any of its subdirectories if possible,
   /// returning a future that completes when the deletion process is finished.
   ///
-  /// @param category The name of the category (e.g., 'card', 'deck').
-  /// @param relativePath The relative path for the category to be deleted, including any desired subdirectories.
+  /// - Parameters:
+  ///   - `category`: The name of the category (e.g., 'card', 'deck').
+  ///   - `relativePath`: The relative path within the category.
   ///
-  /// @return A future that completes when the deletion process has finished. If an error occurs during deletion,
+  /// - Returns: A [Future] that completes when the deletion process has finished. If an error occurs during deletion,
   ///         it will be printed and ignored, allowing the method to complete successfully regardless of whether the deletion was successful or not.
   Future<void> deleteDynamicDirectory({
     required String category,
@@ -214,22 +228,42 @@ class UserDataManager {
     await _removeDynamicDirectory(path);
   }
 
+  /// Determines whether a dynamic directory exists for the specified category and relative path.
+  ///
+  /// - Parameters:
+  ///   - `category`: The name of the category (e.g., 'card', 'deck').
+  ///   - `relativePath`: The relative path within the category.
+  /// - Returns: A [Future] that completes with true if the directory exists, false otherwise.
   Future<bool> doesDynamicDirectoryExist({
     required String category,
     required String relativePath,
   }) async {
     final path = await getDynamicDirectoryAbsolutePath(
         category: category, relativePath: relativePath);
-    return await FileTool().doesDirectoryExist(path);
+    return (await FileTool().doesDirectoryExist(path) &&
+        _allSubDirectories.contains(await getDynamicDirectoryPath(
+            category: category, relativePath: relativePath)));
   }
 
+  /// Gets the normalized path for a dynamic directory based on the specified category and relative path.
+  ///
+  /// - Parameters:
+  ///   - `category`: The category of the directory.
+  ///   - `relativePath`: The relative path within the category.
+  /// - Returns: A [Future] that completes with the normalized directory path.
   Future<String> getDynamicDirectoryPath({
     required String category,
     required String relativePath,
   }) async {
-    return p.normalize('$category/$relativePath');
+    return await FileTool().normalizePath('$category/$relativePath');
   }
 
+  /// Retrieves the absolute normalized path for a dynamic directory based on the specified category and relative path.
+  ///
+  /// - Parameters:
+  ///   - `category`: The category of the directory.
+  ///   - `relativePath`: The relative path within the category.
+  /// - Returns: A [Future] that completes with the absolute normalized directory path.
   Future<String> getDynamicDirectoryAbsolutePath({
     required String category,
     required String relativePath,
@@ -237,6 +271,6 @@ class UserDataManager {
     String userDataPath = await getUserDataPath();
     String dynamicPath = await getDynamicDirectoryPath(
         category: category, relativePath: relativePath);
-    return p.normalize('$userDataPath/$dynamicPath');
+    return await FileTool().normalizePath('$userDataPath/$dynamicPath');
   }
 }
