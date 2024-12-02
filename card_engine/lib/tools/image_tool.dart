@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:card_engine/tools/file_tool.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
@@ -87,11 +88,12 @@ class ImageTool {
   /// @return A `Future` containing a `Size` object with the width and height of the image, or throws an exception if decoding fails.
   static Future<ui.Size> getPngSize(String path) async {
     // Read the contents of the file at the specified path
-    final file = File(path);
+
+    final fileBytes = await FileTool.openFileAsUint8List(path);
 
     try {
       // Decode the PNG image from the bytes read from the file
-      final image = img.decodeImage(file.readAsBytesSync());
+      final image = img.decodeImage(fileBytes);
 
       // If decoding was successful, return a Size object with the width and height of the image
       if (image != null) {

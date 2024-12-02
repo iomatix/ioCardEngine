@@ -27,8 +27,8 @@ class CardComponent extends SpriteGroupComponent<ButtonState>
   @override
   Future<void>? onLoad() async {
     final frontSprite =
-        await EngineTool().loadSpriteFromFile(card.frontSrc, card.name);
-    final reverseSprite = await EngineTool()
+        await EngineTool.loadSpriteFromFile(card.frontSrc, card.name);
+    final reverseSprite = await EngineTool
         .loadSpriteFromFile(card.reverseSrc, '${card.name}_reverse');
 
     sprites = {

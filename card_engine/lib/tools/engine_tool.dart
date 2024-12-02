@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/painting.dart';
 
@@ -6,7 +5,6 @@ import 'package:flame/cache.dart';
 import 'package:flame/sprite.dart';
 
 import '../Exceptions/cache_exception.dart';
-import '../Exceptions/file_not_found_exception.dart';
 import 'file_tool.dart';
 
 ///
@@ -14,7 +12,8 @@ import 'file_tool.dart';
 ///
 class EngineTool {
   static final EngineTool _instance = EngineTool._internal();
-  final Images _imagesHandler = Images();
+  static final Images _imagesHandler = Images();
+  static Images get imagesHandler => _imagesHandler;
 
   EngineTool._internal();
 
@@ -32,7 +31,7 @@ class EngineTool {
   /// or if the image cannot be retrieved from the cache after loading.
   ///
   /// Returns a [Sprite] created from the cached image.
-  Future<Sprite> loadSpriteFromFile(String filePath, String cacheKeyName,
+  static Future<Sprite> loadSpriteFromFile(String filePath, String cacheKeyName,
       {bool overrideCache = false}) async {
     // Check the cache if the key is unique
     if (!overrideCache && _imagesHandler.containsKey(cacheKeyName)) {
@@ -42,7 +41,7 @@ class EngineTool {
     }
 
     // Read file bytes and decode
-    final Uint8List dataBytes = await FileTool().openFileAsUint8List(filePath);
+    final Uint8List dataBytes = await FileTool.openFileAsUint8List(filePath);
     final image = await decodeImageFromList(dataBytes);
 
     // Add image to cache
