@@ -22,7 +22,7 @@ class EngineTool {
     return _instance;
   }
 
-  /// Loads a sprite from the specified file and caches it with the given key.
+  /// Loads a sprite from the specified file and caches it in flame engine with the given key.
   ///
   /// [filePath] The path to the image file.
   /// [cacheKeyName] The key used to store the image in the cache.
