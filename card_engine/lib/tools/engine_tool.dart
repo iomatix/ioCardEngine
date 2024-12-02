@@ -9,6 +9,9 @@ import '../Exceptions/cache_exception.dart';
 import '../Exceptions/file_not_found_exception.dart';
 import 'file_tool.dart';
 
+///
+/// Set of methods to handle flame engine operations integrated to card engine.
+///
 class EngineTool {
   static final EngineTool _instance = EngineTool._internal();
   final Images _imagesHandler = Images();
@@ -19,6 +22,16 @@ class EngineTool {
     return _instance;
   }
 
+  /// Loads a sprite from the specified file and caches it with the given key.
+  ///
+  /// [filePath] The path to the image file.
+  /// [cacheKeyName] The key used to store the image in the cache.
+  /// [overrideCache] If true, existing cache entry with the same key will be overwritten.
+  ///
+  /// Throws a [CacheException] if the cache contains the key and [overrideCache] is false,
+  /// or if the image cannot be retrieved from the cache after loading.
+  ///
+  /// Returns a [Sprite] created from the cached image.
   Future<Sprite> loadSpriteFromFile(String filePath, String cacheKeyName,
       {bool overrideCache = false}) async {
     // Check the cache if the key is unique
