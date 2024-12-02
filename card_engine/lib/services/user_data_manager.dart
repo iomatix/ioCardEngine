@@ -70,10 +70,10 @@ class UserDataManager {
   }
 
   /// Gets the absolute path of the `user_data` directory
-  Future<String> getUserDataPath() async {
+  Future<String> getUserDataPath({userName = "default"}) async {
     final directory = await getApplicationDocumentsDirectory();
     return await FileTool()
-        .normalizePath('${directory.path}/Card Engine/user_data');
+        .normalizePath('${directory.path}/Card Engine/$userName');
   }
 
   /// Monitor and handle changes to subdirectories periodically.
