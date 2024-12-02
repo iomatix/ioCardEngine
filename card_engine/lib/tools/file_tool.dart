@@ -1,19 +1,32 @@
+import 'dart:ffi';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:path/path.dart' as p;
 
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:logger/logger.dart';
 
+import '../Exceptions/loading_file_exception.dart';
+
 ///
 /// Set of methods to handle binary files and directories.
 ///
 class FileTool {
-  FileTool();
+  static final FileTool _instance = FileTool._internal();
+
+  FileTool._internal();
+
+  factory FileTool() {
+    return _instance;
+  }
+
+  /// Get the package directory for bundler
+  Future<String> getCardEngineBundlerPath() async => 'packages/card_engine';
 
   /// Asynchronously opens a file at [filePath], reads its binary data, and returns it as a list of integers.
   ///
   /// Throws an exception if the file is empty or if an error occurs during reading.
-  Future<List<int>> openFileAsUint8List(String filePath) async {
+  Future<Uint8List> openFileAsUint8List(String filePath) async {
     try {
       // Get the absolute path of the provided file.
       final absoluteFilePath = File(filePath).absolute.path;
@@ -22,13 +35,14 @@ class FileTool {
       final bytes = File(absoluteFilePath).readAsBytesSync();
 
       if (bytes.isEmpty) {
-        throw Exception("The file is empty or doesn't exist.");
+        throw LoadingFileException("The file is empty or doesn't exist.");
       }
 
       return bytes;
     } catch (err) {
       // Rethrow the error with a custom message including the file path and original error.
-      throw Exception("Failed to load file  '$filePath'. Error: $err");
+      throw LoadingFileException(
+          "Failed to load file  '$filePath'. Error: $err");
     }
   }
 
@@ -78,8 +92,8 @@ class FileTool {
     }
   }
 
-  /// Saves an app-bundled asset from [assetPath] to a file at [filePath]. 
-  /// 
+  /// Saves an app-bundled asset from [assetPath] to a file at [filePath].
+  ///
   /// **This method will not overwrite the file if it already exists, use [saveAssetToFileAndOverwrite] method instead to overwrite existing files.**
   ///
   /// If the file does not exist or is empty, writes the asset's binary data to the file.
@@ -109,7 +123,7 @@ class FileTool {
   /// Saves an app-bundled asset from [assetPath] to [filePath], overwriting the file if it exists.
   ///
   /// Loads the asset's binary data and writes it to the specified file path, replacing any existing content.
-  /// 
+  ///
   /// Throws an exception if an error occurs during the process.
   Future<void> saveAssetToFileAndOverwrite({
     required String assetPath,

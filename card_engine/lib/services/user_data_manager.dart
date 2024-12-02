@@ -34,9 +34,6 @@ class UserDataManager {
     _allSubDirectories = {..._mandatorySubDirectories};
   }
 
-  /// Get the package directory for bundler
-  Future<String> getCardEngineBundlerPath() async => 'packages/card_engine';
-
   /// Initializes the user data by performing necessary local setup operations.
   Future<void> setupUserData() async {
     await _localSetup();
@@ -56,7 +53,7 @@ class UserDataManager {
     // Save placeholder.png to user_data/cards/.placeholder
     await FileTool().saveAssetToFile(
       assetPath:
-          '${await getCardEngineBundlerPath()}/assets/images/placeholder.png',
+          '${await FileTool().getCardEngineBundlerPath()}/assets/images/placeholder.png',
       filePath: await FileTool()
           .normalizePath('$userDataPath/cards/.placeholder/placeholder.png'),
     );
@@ -64,7 +61,7 @@ class UserDataManager {
     // Copy placeholder-reverse.png to user_data
     await FileTool().saveAssetToFile(
       assetPath:
-          '${await getCardEngineBundlerPath()}/assets/images/placeholder-reverse.png',
+          '${await FileTool().getCardEngineBundlerPath()}/assets/images/placeholder-reverse.png',
       filePath: await FileTool().normalizePath(
           '$userDataPath/cards/.placeholder/placeholder-reverse.png'),
     );

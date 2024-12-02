@@ -6,11 +6,15 @@ import 'package:flame/palette.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 
 import './worlds/table_world.dart';
+import 'services/user_data_manager.dart';
 
 // TODO: Export any libraries intended for clients of this package.
 export './card_engine.dart';
 
 class CardEngine extends FlameGame with RiverpodGameMixin, SingleGameInstance {
+
+  final UserDataManager userDataManagerService;
+  CardEngine({required this.userDataManagerService});
 
   @override
   Color backgroundColor() => const Color.fromARGB(158, 20, 227, 100);
@@ -25,7 +29,7 @@ class CardEngine extends FlameGame with RiverpodGameMixin, SingleGameInstance {
   //      'placeholder.png',
   //      'placeholder-reverse.png',
   //    ]);
-    world = TableWorld();
+    world = TableWorld(userDataManagerService: userDataManagerService);
 
   }
 

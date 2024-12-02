@@ -4,11 +4,20 @@ import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
 
+import '../Exceptions/image_decoding_exception.dart';
+import '../Exceptions/image_processing_exception.dart';
+
 ///
 /// Set of methods to handle image files.
 ///
 class ImageTool {
-  ImageTool();
+  static final ImageTool _instance = ImageTool._internal();
+
+  ImageTool._internal();
+
+  factory ImageTool() {
+    return _instance;
+  }
 
 // This function asynchronously loads an image from Uint8List data.
 // It returns a Future<img.Image?> which resolves with the decoded image or null if there's an error.
@@ -89,11 +98,11 @@ class ImageTool {
         return ui.Size(image.width.toDouble(), image.height.toDouble());
       } else {
         // If decoding failed, throw an exception
-        throw Exception('Failed to decode image');
+        throw ImageDecodingException('Failed to decode image');
       }
     } catch (e) {
       // Handle any errors that occurred during file reading or decoding
-      throw Exception('Error processing image: $e');
+      throw ImageProcessingException('Error processing image: $e');
     }
   }
 }

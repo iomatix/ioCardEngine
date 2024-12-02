@@ -4,13 +4,21 @@ import 'package:printing/printing.dart';
 import 'package:logger/logger.dart';
 import 'package:image/image.dart' as img;
 
+import '../Exceptions/file_format_exception.dart';
+import '../Exceptions/image_size_does_not_match_exception.dart';
 import '../tools/image_tool.dart';
 
 ///
 /// Set of methods to handle PDF files.
 ///
 class PdfTool {
-  PdfTool();
+  static final PdfTool _instance = PdfTool._internal();
+
+  PdfTool._internal();
+
+  factory PdfTool() {
+    return _instance;
+  }
 
   /// Converts a PDF file to a list of images.
   ///
@@ -39,7 +47,7 @@ class PdfTool {
     // Validate file format
     try {
       if (_isValidPdf(pdfData)) {
-        throw Exception('Invalid file format');
+        throw FileFormatException('Invalid file format');
       }
     } catch (err) {
       logger.f("The file format is not .PDF.", error: err);
@@ -60,7 +68,7 @@ class PdfTool {
         // Throw exception if image sizes do not match
         if (prevPage != null) {
           if (requireConstantSize && !ImageTool.isSizeEqual(prevPage, image)) {
-            throw Exception(
+            throw ImageSizeDoesNotMatchException(
                 'The size of the page does not match previous page.');
           }
           prevPage.dispose();
