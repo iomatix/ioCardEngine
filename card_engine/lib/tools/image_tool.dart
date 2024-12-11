@@ -277,14 +277,14 @@ class ImageTool {
 ///
 /// Returns a [Uint8List] representing the compressed image.
 ///
-/// Throws a [FormatException] if the image could not be decoded.
+/// Throws a [ImageDecodingException] if the image could not be decoded.
 Future<Uint8List> compressImage(Uint8List imageData, int targetWidth, int targetHeight, int quality) async {
   // Decode the image from the input data
   img.Image? decodedImage = _decodeImage(imageData);
 
   // Check if the image was successfully decoded
   if (decodedImage == null) {
-    throw FormatException('Failed to decode image.');
+    throw ImageDecodingException('Failed to decode image.');
   }
 
   // Calculate the aspect ratio of the decoded image
