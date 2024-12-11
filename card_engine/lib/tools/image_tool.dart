@@ -263,14 +263,53 @@ class ImageTool {
   }
 }
 
+/// Compresses the given image [imageData] to the target resolution, while maintaining
+/// the aspect ratio, and applies the specified [quality] level.
+///
+/// The function will attempt to resize the image to fit within the [targetWidth] and
+/// [targetHeight], while preserving the aspect ratio. If the decoded image cannot
+/// be retrieved from the input data, an exception will be thrown.
+///
+/// [imageData]: The original image data as a [Uint8List].
+/// [targetWidth]: The target width to resize the image to.
+/// [targetHeight]: The target height to resize the image to.
+/// [quality]: The quality of the compressed image, from 0 (low) to 100 (high).
+///
+/// Returns a [Uint8List] representing the compressed image.
+///
+/// Throws a [FormatException] if the image could not be decoded.
 Future<Uint8List> compressImage(Uint8List imageData, int targetWidth, int targetHeight, int quality) async {
+  // Decode the image from the input data
+  img.Image? decodedImage = _decodeImage(imageData);
+
+  // Check if the image was successfully decoded
+  if (decodedImage == null) {
+    throw FormatException('Failed to decode image.');
+  }
+
+  // Calculate the aspect ratio of the decoded image
+  double aspectRatio = decodedImage.width / decodedImage.height;
+
+  // Calculate the new dimensions to maintain the aspect ratio
+  int newWidth = targetWidth;
+  int newHeight = (targetWidth / aspectRatio).round();
+
+  // Adjust to fit within the target height if needed
+  if (newHeight > targetHeight) {
+    newHeight = targetHeight;
+    newWidth = (targetHeight * aspectRatio).round();
+  }
+
+  // Compress the image with the new dimensions and quality
   return await FlutterImageCompress.compressWithList(
     imageData,
-    minWidth: targetWidth,
-    minHeight: targetHeight,
+    minWidth: newWidth,
+    minHeight: newHeight,
     quality: quality,
   );
 }
+
+
 
 /// Helper function to decode images using the `compute` function for background processing.
 img.Image? _decodeImage(Uint8List imageData) {
