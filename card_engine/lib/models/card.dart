@@ -1,6 +1,7 @@
 import 'package:uuid/uuid.dart';
 import 'meta/card_metadata.dart';
 
+
 /// `[Card]` model designed to be instantiated in the engine and store the data in the application. 
 class Card {
   final String id;
