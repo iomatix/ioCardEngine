@@ -16,6 +16,7 @@ dependencies:
   logger: ">=2.4.0 <3.0.0"
   card_engine:
     path: ./card_engine
+  file_picker: '>=8.1.4 <9.0.0'
 
 
 dev_dependencies:

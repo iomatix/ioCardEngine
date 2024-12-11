@@ -13,6 +13,9 @@ class UserDataManager {
   /// Lockable memory access
   final Mutex _lock;
 
+  // File Tool Instance
+  final FileTool _fileTool = FileTool(); 
+
   /// Interval for run-time monitoring
   @Deprecated("This interval is not used anymore")
   static const _monitorInterval = Duration(milliseconds: 370);
@@ -44,25 +47,25 @@ class UserDataManager {
   Future<void> _localSetup() async {
     final userDataPath = await getUserDataPath();
     // Create the user_data directory and mandatory subdirectories
-    await FileTool.createDirectory(userDataPath);
+    await _fileTool.createDirectory(userDataPath);
     for (final subDir in List.from(_allSubDirectories)) {
-      final path = await FileTool.normalizePath('$userDataPath/$subDir');
-      await FileTool.createDirectory(path);
+      final path = await _fileTool.normalizePath('$userDataPath/$subDir');
+      await _fileTool.createDirectory(path);
     }
 
     // Save placeholder.png to user_data/cards/.placeholder
-    await FileTool.saveAssetToFile(
+    await _fileTool.saveAssetToFile(
       assetPath:
-          '${await FileTool.getCardEngineBundlerPath()}/assets/images/placeholder.png',
-      filePath: await FileTool
+          '${await _fileTool.getCardEngineBundlerPath()}/assets/images/placeholder.png',
+      filePath: await _fileTool
           .normalizePath('$userDataPath/cards/.placeholder/placeholder.png'),
     );
 
     // Copy placeholder-reverse.png to user_data
-    await FileTool.saveAssetToFile(
+    await _fileTool.saveAssetToFile(
       assetPath:
-          '${await FileTool.getCardEngineBundlerPath()}/assets/images/placeholder-reverse.png',
-      filePath: await FileTool.normalizePath(
+          '${await _fileTool.getCardEngineBundlerPath()}/assets/images/placeholder-reverse.png',
+      filePath: await _fileTool.normalizePath(
           '$userDataPath/cards/.placeholder/placeholder-reverse.png'),
     );
 
@@ -72,7 +75,7 @@ class UserDataManager {
   /// Gets the absolute path of the `user_data` directory
   Future<String> getUserDataPath({userName = "default"}) async {
     final directory = await getApplicationDocumentsDirectory();
-    return await FileTool
+    return await _fileTool
         .normalizePath('${directory.path}/Card Engine/$userName');
   }
 
@@ -97,7 +100,7 @@ class UserDataManager {
         final currentSubDirs = Directory(userDataPath)
             .listSync(recursive: true)
             .whereType<Directory>()
-            .map((dir) => FileTool.normalizePathSync(dir.path.replaceFirst(
+            .map((dir) => _fileTool.normalizePathSync(dir.path.replaceFirst(
                 RegExp('^${RegExp.escape(userDataPath)}[\\\\/]*'), '')))
             .toSet();
         if (currentSubDirs != _allSubDirectories) {
@@ -152,9 +155,9 @@ class UserDataManager {
     _allSubDirectories.add(dirDynamicPath);
     final userDataPath = await getUserDataPath();
     final path =
-        await FileTool.normalizePath('$userDataPath/$dirDynamicPath');
+        await _fileTool.normalizePath('$userDataPath/$dirDynamicPath');
     try {
-      await FileTool.createDirectory(path);
+      await _fileTool.createDirectory(path);
     } catch (e) {
       if (e is PathExistsException) {
         print('Directory already exists, skipping creation: $path');
@@ -171,9 +174,9 @@ class UserDataManager {
     _allSubDirectories.remove(dirDynamicPath);
     final userDataPath = await getUserDataPath();
     final path =
-        await FileTool.normalizePath('$userDataPath/$dirDynamicPath');
+        await _fileTool.normalizePath('$userDataPath/$dirDynamicPath');
     try {
-      await FileTool.deleteDirectory(path);
+      await _fileTool.deleteDirectory(path);
     } catch (e) {
       if (e is PathNotFoundException) {
         print('Directory not found, skipping deletion: $path');
@@ -237,7 +240,7 @@ class UserDataManager {
   }) async {
     final path = await getDynamicDirectoryAbsolutePath(
         category: category, relativePath: relativePath);
-    return (await FileTool.doesDirectoryExist(path) &&
+    return (await _fileTool.doesDirectoryExist(path) &&
         _allSubDirectories.contains(await getDynamicDirectoryPath(
             category: category, relativePath: relativePath)));
   }
@@ -252,7 +255,7 @@ class UserDataManager {
     required String category,
     required String relativePath,
   }) async {
-    return await FileTool.normalizePath('$category/$relativePath');
+    return await _fileTool.normalizePath('$category/$relativePath');
   }
 
   /// Retrieves the absolute normalized path for a dynamic directory based on the specified category and relative path.
@@ -268,6 +271,6 @@ class UserDataManager {
     String userDataPath = await getUserDataPath();
     String dynamicPath = await getDynamicDirectoryPath(
         category: category, relativePath: relativePath);
-    return await FileTool.normalizePath('$userDataPath/$dynamicPath');
+    return await _fileTool.normalizePath('$userDataPath/$dynamicPath');
   }
 }

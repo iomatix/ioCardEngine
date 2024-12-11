@@ -16,8 +16,10 @@ class CardComponent extends SpriteGroupComponent<CardState>
         HasVisibility {
   final String id;
   Card card;
-  CardState _currentCardState = CardState.down;
+
   Vector2? _lastScreenSize;
+
+  final EngineTool _engineTool = EngineTool();
 
   CardComponent({required this.card})
       : id =
@@ -30,8 +32,8 @@ class CardComponent extends SpriteGroupComponent<CardState>
   @override
   Future<void>? onLoad() async {
     final frontSprite =
-        await EngineTool.loadSpriteFromFile(card.frontSrc, card.name);
-    final reverseSprite = await EngineTool.loadSpriteFromFile(
+        await _engineTool.loadSpriteFromFilePath(card.frontSrc, card.name);
+    final reverseSprite = await _engineTool.loadSpriteFromFilePath(
         card.reverseSrc, '${card.name}_reverse');
 
     sprites = {
@@ -39,9 +41,9 @@ class CardComponent extends SpriteGroupComponent<CardState>
       CardState.down: reverseSprite,
     };
 
-    //makeVisible();
-    //uncoverCard();
-    //setPosition(Vector2(0, 0));
+    makeVisible();
+    coverCard();
+    setPosition(Vector2(0, 0));
   }
 
   @override
