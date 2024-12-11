@@ -162,8 +162,6 @@ class PdfTool {
           error: e,
           stackTrace: stackTrace,
         );
-        // Optionally, decide whether to continue processing other files
-        // or rethrow the exception. Here, we continue processing.
       }
     }));
 

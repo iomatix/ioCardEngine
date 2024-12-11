@@ -6,6 +6,7 @@ import 'package:card_engine/Exceptions/image_decoding_exception.dart';
 import 'package:card_engine/Exceptions/image_processing_exception.dart';
 import 'package:card_engine/Exceptions/unknown_exception.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image/image.dart' as img;
 import 'package:logger/logger.dart';
 
@@ -260,6 +261,15 @@ class ImageTool {
 
     return completer.future;
   }
+}
+
+Future<Uint8List> compressImage(Uint8List imageData, int targetWidth, int targetHeight, int quality) async {
+  return await FlutterImageCompress.compressWithList(
+    imageData,
+    minWidth: targetWidth,
+    minHeight: targetHeight,
+    quality: quality,
+  );
 }
 
 /// Helper function to decode images using the `compute` function for background processing.
